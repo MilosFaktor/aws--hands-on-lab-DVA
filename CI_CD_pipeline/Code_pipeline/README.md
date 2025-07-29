@@ -113,7 +113,7 @@ Don’t forget to:
 
 ## 🔗 Related Links
 
-- [Main Hands-On Repo (aws-hands-on-lab-SAA)](https://github.com/MilosFaktor/aws-hands-on-lab-SAA)
+- [Main Hands-On Repo (aws--hands-on-lab-DVA)](https://github.com/MilosFaktor/aws--hands-on-lab-DVA)
 
 ---
 
