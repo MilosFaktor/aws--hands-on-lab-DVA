@@ -102,7 +102,7 @@ Pipeline deployment initially failed due to **insufficient IAM permissions**.
 
 ## 🧼 Cleanup
 
-Don’t forget to:
+Don't forget to:
 - Terminate `First-app-beanstalk-env` and `First-app-beanstalk-prod`
 - Delete the Beanstalk application
 - Delete the CodePipeline
@@ -119,4 +119,4 @@ Don’t forget to:
 
 ## 🏷️ Tags
 
-`#AWS` `#CodePipeline` `#ElasticBeanstalk` `#CI_CD` `#DeveloperAssociate` `#HandsOnCloud` `#NodeJS` `#GitHub` `#SSH` `#EC2` `#IAM`# CI/CD Pipeline
+`#AWS` `#CodePipeline` `#ElasticBeanstalk` `#CI_CD` `#DeveloperAssociate` `#HandsOnCloud` `#NodeJS` `#GitHub` `#SSH` `#EC2` `#IAM`
