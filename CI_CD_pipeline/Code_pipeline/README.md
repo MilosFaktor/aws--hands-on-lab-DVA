@@ -10,6 +10,7 @@ Build a fully automated pipeline so that:
 - Every push to GitHub triggers the pipeline
 - The pipeline deploys the updated code to **Elastic Beanstalk**
 - The live **Node.js application** reflects the changes instantly
+- Include a **Manual Approval** step before deploying to production
 
 ---
 
@@ -17,7 +18,7 @@ Build a fully automated pipeline so that:
 
 ### Elastic Beanstalk Environments
 
-1. Created the main application and environment:
+1. Created the main application and staging environment:
    - **Application Name**: `First-app-beanstalk`
    - **Environment Name**: `First-app-beanstalk-env`
    - **Platform**: Node.js 22
@@ -39,43 +40,60 @@ Build a fully automated pipeline so that:
    - **Execution Mode**: Queued
    - **Service Role**: Created automatically
 
-2. Source Stage:
-   - **GitHub (via GitHub App)**
-   - Connected repo + branch (e.g., `main`)
-   - Enabled **webhook** for automatic triggers
+2. **Source Stage**:
+   - GitHub (via GitHub App)
+   - Connected repo + branch (`main`)
+   - Enabled webhook for automatic triggers
 
-3. Build & Test:
+3. **Build & Test Stages**:
    - Skipped (for now)
 
-4. Deploy Stage:
-   - **Provider**: Elastic Beanstalk
-   - **Deploy Action**: `Deploy to First-app-beanstalk-env`
-   - **Target App**: `First-app-beanstalk`
+4. **Deploy to Staging**:
+   - Provider: Elastic Beanstalk
+   - Deploy Action: `Deploy to First-app-beanstalk-env`
+   - Target App: `First-app-beanstalk`
+
+5. **Manual Approval Stage**:
+   - Added between staging and production
+   - Requires manual confirmation before deploying to production
+
+6. **Deploy to Production**:
+   - Provider: Elastic Beanstalk
+   - Deploy Action: `Deploy to First-app-beanstalk-prod`
+   - Environment: `First-app-beanstalk-prod`
 
 ---
 
 ## 🧠 Real-World Debugging & Workflow
 
-During the hands-on, the **video tutorial** used a different UI and codebase than what AWS deployed to my Beanstalk instance.
+During the hands-on, the video tutorial used a different UI and codebase than what AWS deployed to my Beanstalk instance.
 
 ### Problem:
-I wanted to **only change a color and a heading** in the deployed website — but I couldn't find the deployed files anywhere in GitHub or the AWS Console.
+I wanted to only change a color and a heading in the deployed website — but I couldn't find the deployed files anywhere in GitHub or the AWS Console.
 
 ### Solution:
-I created a **new environment** with:
+I created a new environment with:
 - SSH access (with key pair)
-- Connected to the underlying **EC2 instance**
+- Connected to the underlying EC2 instance
 - Located and copied the actual application files:
   - `index.html`
   - `app.js`
   - `chrome.yaml`
-  - *(and one more file used in the sample app)*
+  - `package.json`
+  - [`node_modules/`](nodejs-v2-blue)
 
 Then I:
-- Created a **GitHub repo** from these files  
-- Edited the **hero section color** and the `<h1>` header  
-- Committed and pushed to GitHub  
-- ✅ Pipeline automatically triggered and deployed the updated version to `First-app-beanstalk-env`
+- Created a GitHub repo from these files
+- Edited the **hero section color** and the `<h1>` header
+- Committed and pushed to GitHub:
+  ```bash
+  git add .
+  git commit -m "Update index.html with new hero section color and header text"
+  git push origin main
+  ```
+✅ Pipeline automatically triggered and deployed to `First-app-beanstalk-env`
+
+✅ After manual approval, the production stage deployed to `First-app-beanstalk-prod`
 
 ---
 
@@ -93,16 +111,16 @@ Pipeline deployment initially failed due to **insufficient IAM permissions**.
 
 ## ✅ Outcome
 
-- Changes pushed to GitHub were deployed to Beanstalk automatically  
-- I retrieved and reused the actual deployed files via EC2  
-- I modified the frontend safely and validated full pipeline flow  
-- The hands-on taught me how to **reverse-engineer a sample app**, connect CodePipeline + GitHub, and fix IAM + deployment issues under pressure
+- Full CI/CD pipeline from **GitHub → Staging → Manual Approval → Production**
+- Changes deployed safely after confirmation
+- Successfully retrieved, edited, and deployed the actual Beanstalk sample app
+- The hands-on taught me how to **reverse-engineer a sample app**, fix IAM issues, and configure pipelines with approval flows
 
 ---
 
 ## 🧼 Cleanup
 
-Don't forget to:
+Don’t forget to:
 - Terminate `First-app-beanstalk-env` and `First-app-beanstalk-prod`
 - Delete the Beanstalk application
 - Delete the CodePipeline
@@ -114,11 +132,8 @@ Don't forget to:
 ## 🔗 Related Links
 
 - [Main Hands-On Repo (aws--hands-on-lab-DVA)](https://github.com/MilosFaktor/aws--hands-on-lab-DVA)
-<<<<<<< HEAD
 - [Screenshots of the Project](Screenshots/)
-=======
 
->>>>>>> 0f147968df0bcb493dd205809295b9d70c9d061d
 ---
 
 ## 🏷️ Tags
